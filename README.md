@@ -12,4 +12,8 @@ pip install anime-reference
 ### Via GitHub
 Alternatively, you can just clone this repo and import the libraries at your own discretion.
 
-### API
+### Documentation
+Currently, the package can get per episode summaries for a few anime titles.
+The package will be expanding to include more and other content as well, but this is a start.
+
+For full details on the Documentation please refer to the [documentation](https://github.com/Matt711/anime_reference/blob/master/Documentation.md).

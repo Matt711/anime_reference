@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(name='anime_reference',
-      version='0.0.3',
+      version='0.0.8',
       description='A reference package for all things anime.',
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -24,13 +24,17 @@ setup(name='anime_reference',
       python_requires=">=3.6",
       install_requires=[
           'beautifulsoup4==4.9.3',
-          'requests==2.25.1'
+          'requests==2.25.1',
+          'pandas==1.2.4',
+          'lxml==4.6.3',
+          'html5lib==1.1'
       ],
       keywords=[
           "fandom anime",
           "manga",
           "data mining",
           "anime",
-          "anime reference"
-      ],
-      zip_safe=False)
+          "anime reference",
+          "manga reference"
+      ]
+      )
