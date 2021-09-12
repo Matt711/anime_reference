@@ -11,7 +11,7 @@ except:
 
 class Naruto:
     """
-    A class to represent a anime title.
+    A class to represent a Naruto anime title.
     ...
 
     Attributes
@@ -42,8 +42,8 @@ class Naruto:
     episode_names():
         Gets a list of episode names
 
-    episodes():
-        Gets the number of episodes
+    movie_names():
+        Gets a list of movie names
     """
     def __init__(self, title: str) -> None:
         self.title = title
@@ -209,11 +209,7 @@ class Naruto:
     @property
     def movie_names(self) -> List[str]:
         return list(self._movie_link_dict.keys())
-
-    @property
-    def episodes(self) -> int:
-        return len(self.dataframe)
-
+    
 if __name__ == "__main__":
     x = Naruto("naruto")
     y = Naruto("naruto shippuden")

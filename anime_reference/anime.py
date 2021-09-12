@@ -6,7 +6,7 @@ except:
     from Naruto import Naruto
     from constants import *
 
-def get_summary(title: str, episode_name: str) -> Optional[str]:
+def get_summary(title: str, name: str, movie = False) -> Optional[str]:
     """
     Description: Gets the summary of a given anime episode.
 
@@ -19,29 +19,17 @@ def get_summary(title: str, episode_name: str) -> Optional[str]:
         --------
         str: summary of anime episode
     """
+    if movie:
+        title_lower = title.lower()
+        anime = anime_object(title_lower)
+        try:
+            return anime.movie_summary(name)
+        except AttributeError:
+            return None
     title_lower = title.lower()
     anime = anime_object(title_lower)
     try:
-        return anime.episode_summary(episode_name)
-    except AttributeError:
-        return None
-
-def get_episode_names(title: str) -> Optional[List[str]]:
-    """
-    Description: Gets all episode names of a given anime title.
-
-        Parameters:
-        -----------
-        title (str): anime title
-
-        Returns:
-        --------
-        List[str]: List of all anime episode names
-    """
-    title_lower = title.lower()
-    anime = anime_object(title_lower)
-    try:
-        return anime.episode_names
+        return anime.episode_summary(name)
     except AttributeError:
         return None
     
@@ -60,11 +48,11 @@ def get_episodes(title: str) -> Optional[int]:
     title = title.lower()
     anime = anime_object(title)
     try:
-        return anime.episodes
+        return anime.episode_names
     except AttributeError:
         return None
 
-def get_movie_names(title: str) -> Optional[List[str]]:
+def get_movies(title: str) -> Optional[List[str]]:
     """
     Description: Gets all episode names of a given anime title.
 
@@ -76,35 +64,12 @@ def get_movie_names(title: str) -> Optional[List[str]]:
         --------
         List[str]: List of all anime movie names
     """
-    return None
-
-def get_movies(title: str) -> Optional[int]:
-    """
-    Description: Gets the number of movies for a given anime title.
-
-        Parameters:
-        -----------
-        title (str): anime title
-
-        Returns:
-        --------
-        int: Number of movies
-    """
-    return None
-
-def get_synopsis(title: str) -> Optional[str]:
-    """
-    Description: Gets a complete synopsis of a given anime title.
-
-        Parameters:
-        -----------
-        title (str): anime title
-        
-        Returns:
-        --------
-        str: A complete synopsis of a given anime title
-    """
-    return None
+    title = title.lower()
+    anime = anime_object(title)
+    try:
+        return anime.movie_names
+    except AttributeError:
+        return None
 
 def get_anime_titles() -> Optional[List[str]]:
     """
@@ -118,7 +83,7 @@ def get_anime_titles() -> Optional[List[str]]:
         --------
         List[str]: List of all anime titles currently supported
     """
-    return None
+    return titles
 
 def anime_object(title: str):
     """
@@ -140,4 +105,5 @@ def anime_object(title: str):
         return None
     
 if __name__ == "__main__":
-    print(get_summary("naruto shippuden", "Naruto and Hinata"))
+    print(get_summary("naruto shippuden", 'Naruto the Movie: Blood Prison', movie = True))
+    print(get_movies("naruto shippuden"))
