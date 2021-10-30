@@ -1,10 +1,9 @@
 from typing import Optional, List
+import importlib
 try:
-    from anime_reference.Naruto import Naruto
-    from anime_reference.constants import *
+    from anime_reference.anime_objects.constants import titles_classes, titles_links
 except:
-    from Naruto import Naruto
-    from constants import *
+    from anime_objects.constants import titles_classes, titles_links
 
 def get_summary(title: str, name: str, movie = False) -> Optional[str]:
     """
@@ -98,12 +97,19 @@ def anime_object(title: str):
         --------
         Optional[]: List of all anime titles currently supported
     """
-    if title in NARUTO.keys():
-        return Naruto(title)
+    if title in titles_classes.keys():
+        try:
+            import_statement = "anime_reference.anime_objects."+titles_classes[title]
+        except:
+            import_statement = "anime_objects."+titles_classes[title]
+        module = importlib.import_module(import_statement)
+        class_ = getattr(module, titles_classes[title])
+        instance = class_(title)
+        return instance
     else:
         print(f"Title {title} is not a valid title.")
         return None
     
 if __name__ == "__main__":
-    print(get_summary("naruto shippuden", 'Naruto the Movie: Blood Prison', movie = True))
+    print(get_summary("naruto shippuden", 'Naruto and Hinata'))
     print(get_movies("naruto shippuden"))

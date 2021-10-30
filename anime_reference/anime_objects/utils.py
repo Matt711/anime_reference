@@ -22,7 +22,7 @@ def clean_str_list(list_str: List[str], search_str: str = '"(.*)"') -> List[str]
         try:
             clean_list.append(result.group(1).strip())
         except AttributeError:
-            continue
+            clean_list.append(string)
     return clean_list
 
 def format_episode_links(prefix_url: str, links: List[str]) -> List[str]:

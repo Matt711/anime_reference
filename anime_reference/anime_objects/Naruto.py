@@ -3,13 +3,15 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from typing import Optional, Dict, List, Tuple
 try:
-    from anime_reference.constants import *
-    from anime_reference.utils import clean_str_list, format_episode_links, clean_text
+    from anime_reference.anime_objects.Anime import Anime
+    from anime_reference.anime_objects.constants import *
+    from anime_reference.anime_objects.utils import clean_str_list, format_episode_links, clean_text
 except:
+    from Anime import Anime
     from constants import *
     from utils import clean_str_list, format_episode_links, clean_text
 
-class Naruto:
+class Naruto(Anime):
     """
     A class to represent a Naruto anime title.
     ...
@@ -36,8 +38,11 @@ class Naruto:
     get_episodes():
         Gets a dataframe of episode #, title, and airdate (Japanese and English)
 
-    summary(episode_name):
+    episode_summary(episode_name):
         Gets the summary of the given episode name
+
+    movie_summary(movie_name):
+        Gets the summary of the given movie name
 
     episode_names():
         Gets a list of episode names
@@ -46,15 +51,8 @@ class Naruto:
         Gets a list of movie names
     """
     def __init__(self, title: str) -> None:
-        self.title = title
-        self._check_title()
+        super().__init__(title)
         return None
-
-    def _check_title(self) -> None:
-        if self.title not in NARUTO.keys():
-            print(f"Anime \"{title}\" is not a valid anime title.")
-            # TODO: Add a helper function that asks "Did you mean (title)?"
-            return None
         
     def _check_episode_name(self, episode_name: str) -> None:
         if episode_name not in self.episode_names:
@@ -67,13 +65,10 @@ class Naruto:
             print(f"Movie \"{movie_name}\" is not a valid {self.title} movie name.")
             # TODO: Add a helper function that asks "Did you mean (movie name)?"
             return None
-        
-    def _get_link(self) -> str:
-        return NARUTO[self.title] # link for the all epsiodes, movies of the different naruto titles
 
     @property
     def _episode_link_dict(self) -> Optional[Dict[str, str]]:
-        link = self._get_link()
+        link = self.get_link
         response = get(link)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -105,7 +100,7 @@ class Naruto:
 
     @property
     def _movie_link_dict(self) -> Optional[Dict[str, str]]:
-        link = self._get_link()
+        link = self.get_link
         response = get(link)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -148,27 +143,17 @@ class Naruto:
 
     @property
     def dataframe(self) -> Optional[Tuple[pd.DataFrame, pd.DataFrame]]:
-        link = self._get_link()
-        try:
-            response = get(link)
-        except:
-            return None
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.content, 'html.parser')
-            tables = soup.find_all('table')
-            if self.title == "naruto":
-                df_episodes = pd.read_html(str(tables))[0]
-                df_movies = pd.read_html(str(tables))[4]
-            elif self.title == "naruto shippuden":
-                df_episodes = pd.read_html(str(tables))[1]
-                df_movies = pd.read_html(str(tables))[5]
-            elif self.title == "boruto":
-                df_episodes = pd.read_html(str(tables))[2]
-                df_movies = pd.DataFrame(columns=['#', 'Title', 'Japanese Airdate', 'English Airdate'])
-            return df_episodes, df_movies
-        else:
-            print(f"Bad response, status code: {response.status_code}")
-            return None
+        tables = super().dataframe
+        if self.title == "naruto":
+            df_episodes = tables[0]
+            df_movies = tables[4]
+        elif self.title == "naruto shippuden":
+            df_episodes = tables[1]
+            df_movies = tables[5]
+        elif self.title == "boruto":
+            df_episodes = tables[2]
+            df_movies = pd.DataFrame(columns=['#', 'Title', 'Japanese Airdate', 'English Airdate'])
+        return df_episodes, df_movies
    
     def episode_summary(self, episode_name: str) -> Optional[str]:
         link = self._get_episode_link(episode_name)
@@ -201,15 +186,20 @@ class Naruto:
         else:
             print(f"Bad response, status code: {response.status_code}")
             return None
-        
-    @property
-    def episode_names(self) -> List[str]:
-        return list(self._episode_link_dict.keys())
 
     @property
+    def episode_names(self) -> List[str]:
+        try:
+            return clean_str_list(list(self.dataframe[0].iloc[:,1]))
+        except:
+            return None
+        
+    @property
     def movie_names(self) -> List[str]:
-        return list(self._movie_link_dict.keys())
-    
+        try:
+            return clean_str_list(list(self.dataframe[1].iloc[:,1]))
+        except:
+            return None
 if __name__ == "__main__":
     x = Naruto("naruto")
     y = Naruto("naruto shippuden")
