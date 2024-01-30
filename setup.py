@@ -26,7 +26,7 @@ setup(name='anime_reference',
           'beautifulsoup4==4.9.3',
           'requests==2.25.1',
           'pandas==1.2.4',
-          'lxml==4.6.3',
+          'lxml==4.9.1',
           'html5lib==1.1'
       ],
       keywords=[
