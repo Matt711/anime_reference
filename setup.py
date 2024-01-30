@@ -24,7 +24,7 @@ setup(name='anime_reference',
       python_requires=">=3.6",
       install_requires=[
           'beautifulsoup4==4.9.3',
-          'requests==2.25.1',
+          'requests==2.31.0',
           'pandas==1.2.4',
           'lxml==4.9.1',
           'html5lib==1.1'
